@@ -30,17 +30,18 @@ shinyUI(navbarPage("Trees in New York",id="nav",
              sidebarPanel(
                conditionalPanel(condition="input.edaPanels==1",
                                 helpText("Fit your model"),
-                                selectInput("variables","Choose one variable:",Variables)),
+                                selectInput("variables","Choose one variable:",Problems,selected = "Root Stone")),
                conditionalPanel(condition="input.edaPanels==2",
                                 helpText("Choose the Problem"),
-                                checkboxGroupInput("variables2","Choose at least 2 Components:",Variables))
+                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems)),
+                                submitButton("Apply changes")
              ),
              mainPanel(
                tabsetPanel(type="pill",
                            tabPanel("Ananysis of One Element to Health",
-                                    plotOutput("plot1"),value=1),
+                                    plotlyOutput("plot1"),value=1),
                            tabPanel("Ananysis of Effects between different Elements",
-                                    plotOutput("plot2"),value=2),
+                                    plotlyOutput("plot2"),value=2),
                            id="edaPanels"
                            )
              )
@@ -50,12 +51,12 @@ shinyUI(navbarPage("Trees in New York",id="nav",
            sidebarLayout(position="right",
                          sidebarPanel(
                            h3("Select the number of clusters"),
-                           selectInput("k","Number of clusters:",choices = list('3','4','5')),
-                           selectInput("method","Methods for Clustering:",choices=list('Kmeans','Hierarchical Clustering'))
+                           selectInput("k","Number of clusters:",choices = list('3','4','5'),selected = '3')
+#                           selectInput("method","Methods for Clustering:",choices=list('Kmeans','Hierarchical Clustering'))
                          ),
                          mainPanel(
                            h2("Clustering"),
-                           plotOutput("kmeans")
+                           plotOutput("kmeans",height = 600)
                          ))),
   tabPanel("Text Mining"
            )

@@ -5,16 +5,25 @@ library(XML)
 library(zipcode)
 library(dplyr)
 library(plotly)
+library(choroplethr)
+library(dplyr)
+library(ggplot2)
+library(devtools)
+library(choroplethrZip)
+library(mapproj)
+library(stringr)
 
 
 #Load data
 Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
 names(Trees)
+Trees2=Trees[,c(8,9,11,37,38)]
+#names(Trees)
 
-
+#########################################################################################################
 #Create dataset used for kmeans
 zip_data=matrix(ncol=15)
-levels(as.factor(Trees$brch_light))
+
 colnames(zip_data)=c("Zipcode","Fair health","Poor health","Harmful Guards",
                      "Helpful Guards","Sidewalk Damage","rootstone","rootgrate","rootother",
                      "trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
@@ -41,20 +50,15 @@ for (i in ziplist){
 }
 zip_data=zip_data[2:nrow(zip_data),]
 
-zip_data<-data.frame(zip_data)
-
-zipdata<-zip_data[,2:13]
-zipdata<-data.frame(zipdata)
-zipdata[,1:12] <- sapply(zipdata[, 1:12], as.numeric)
-set.seed(123)
 
 
-Types=names(summary(Trees$genus))
+#########################################################################################################
+Types=names(summary(Trees$category))
 Variables=c("Harmful Guards","Sidewalk Damage","rootstone","rootgrate","rootother","trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
 
-
+############################################################################################################
 #Processing Tree
-treedata <- Trees[!(Trees$health == ""), ]
+treedata <- Trees[!(Trees$health == "N.A."), ]
 
 ### factor into integer
 treedata$root_stone<-as.integer(treedata$root_stone=='Yes')
@@ -66,8 +70,8 @@ treedata$brch_shoe<-as.integer(treedata$brch_shoe=='Yes')
 treedata$sidewalk<-as.integer(treedata$sidewalk=='Damage')
 #treedata$guards<-factor(treedata$guards, levels = c("Unsure","Harmful","None","Helpful"),labels= c("1","2","3","4"))
 #treedata$guards<-as.integer(treedata$guards)
-#treedata$health<-factor(treedata$health, levels = c("Poor","Fair","Good"),labels= c("1","2","3"))
-#treedata$health<-as.integer(treedata$health)
+treedata$health<-factor(treedata$health, levels = c("Poor","Fair","Good"),labels= c("1","2","3"))
+treedata$health<-as.integer(treedata$health)
 head(treedata)
 TreeProblems<-rbind()
 TreeNOProblems<-rbind()
@@ -122,23 +126,47 @@ rownames(TreeNOProblems)<-c('root_stone','root_grate','trnk_wire',
 
 rowtree<-rownames(TreeProblems)
 top_labels <- c('Poor', 'Fair', 'Good')
-
+class(rowtree)
 HealthData<-data.frame(rowtree,TreeProblems)
-rownames(HealthData)=c("rowtree","X1","X2","X3")
+class(HealthData$rowtree)
+Problems<-c('Root Stone','Root Grate','Trunk Wire',
+            'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
+#plot_ly(HealthData, x = X1, y = rowtree, type = 'bar', orientation = 'h', name='Poor',
+#        marker = list(color = 'rgba(38, 24, 74, 0.8)',
+#                      line = list(color = 'rgb(248, 248, 249)'))) %>%
+#  add_trace(x = X2, y=rowtree,type = 'bar',orientation = 'h', name='Fair',marker = list(color = 'rgba(71, 58, 131, 0.8)')) %>%
+#  add_trace(x = X3, y=rowtree,type = 'bar',orientation = 'h', name='Good',marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+#  layout(barmode = 'stack',
+#         paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
+         #margin = list(l = 120, r = 10, t = 140, b = 80),
+#         showlegend = TRUE)  
 
 
 
-##### bar plot to compare the health status with or without a single cause
-
-#ProblemPresence<-c('Yes', 'No')
-#Poor<-rbind(TreeProblems[1,1],TreeNOProblems[1,1])
-#Fair<-rbind(TreeProblems[1,2],TreeNOProblems[1,2])
-#Good<-rbind(TreeProblems[1,3],TreeNOProblems[1,3])
-#HealthData2<-data.frame()
-#HealthData2<-data.frame(ProblemPresence,Poor,Fair,Good)
+############################################################################################################
 
 
-#plot_ly(HealthData2, x=ProblemPresence, y = Poor, type = 'bar', name = 'Poor') %>%
-#  add_trace(x=ProblemPresence,y = Fair, type = 'bar',name = 'Fair') %>%
-#  add_trace(x=ProblemPresence,y = Good, type = 'bar',name = 'Good') %>%
-#  layout(yaxis = list(title = 'Percent'),xaxis = list(title = 'Precense of Problem'), barmode = 'stack')
+#Load Zip Map Data
+
+data(df_pop_zip)
+#head(df_pop_zip)
+
+#km.res<-kmeans(zipdata,3,nstart = 25)
+#    fviz_cluster(km.res, data = data.scaled, geom = "point",
+#                stand = FALSE, frame.type = "norm")
+
+#aggregate(zipdata,by=list(km.res$cluster),FUN=mean)
+
+#zip_data$kmcluster<-km.res$cluster
+
+vn=switch('Root Stone',
+          'Root Stone'="1",
+          'Root Grate'="2",
+          'Trunk Wire'="3",
+          'Trunk Light'="4",
+          'Brch Light'="5",
+          'Brch Shoe'="6",
+          'Sidewalk'=7    
+)
+vn=as.numeric(vn)
+vn
