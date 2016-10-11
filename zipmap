@@ -1,1 +1,28 @@
+install.packages("choroplethr")
+install.packages("choroplethrMaps")
+install.packages("choroplethrZip")
+install.packages("devtools")
+install.packages("mapproj")            
+install.packages("devtools")
+install_github('arilamstein/choroplethrZip@v1.3.0')
 
+
+library(choroplethr)
+library(dplyr)
+library(ggplot2)
+library(devtools)
+library(choroplethrZip)
+library(mapproj)
+
+data(df_pop_zip)
+head(df_pop_zip)
+df_pop_zip$value=sample(1:3,replace = TRUE, size=dim(df_pop_zip)[1])
+
+# New York City is comprised of 5 counties: Bronx, Kings (Brooklyn), New York (Manhattan), 
+# Queens, Richmond (Staten Island). Their numeric FIPS codes are:
+nyc_fips = c(36005, 36047, 36061, 36081, 36085)
+zip_choropleth (df_pop_zip,
+                county_zoom=nyc_fips,
+                legend="Population")
+
+zip_choropleth(df_pop_zip, county_zoom = nyc_flips + coord_map())
