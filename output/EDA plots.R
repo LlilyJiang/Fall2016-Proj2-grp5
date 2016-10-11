@@ -80,7 +80,8 @@ plot_ly(HealthData, x = X1, y = rowtree, type = 'bar', orientation = 'h', name='
   layout(barmode = 'stack',
          paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
          #margin = list(l = 120, r = 10, t = 140, b = 80),
-         showlegend = TRUE)  
+         showlegend = TRUE,
+         xaxis=list(title = ""),yaxis=list(title = ""))  
 
 
 ##### bar plot to compare the health status with or without a single cause
