@@ -20,9 +20,9 @@ df_pop_zip$value=sample(1:3,replace = TRUE, size=dim(df_pop_zip)[1])
 
 # New York City is comprised of 5 counties: Bronx, Kings (Brooklyn), New York (Manhattan), 
 # Queens, Richmond (Staten Island). Their numeric FIPS codes are:
-nyc_fips = c(36005, 36047, 36061, 36081, 36085)
+nyc_flips = c(36005, 36047, 36061, 36081, 36085)
 zip_choropleth (df_pop_zip,
-                county_zoom=nyc_fips,
+                county_zoom=nyc_flips,
                 legend="Population")
 
-zip_choropleth(df_pop_zip, county_zoom = nyc_flips + coord_map())
+zip_choropleth(df_pop_zip, county_zoom = nyc_flips) + coord_map()
