@@ -12,6 +12,7 @@ library(devtools)
 library(choroplethrZip)
 library(mapproj)
 library(stringr)
+library(reshape2)
 
 
 #Load data

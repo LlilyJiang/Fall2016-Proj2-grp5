@@ -17,7 +17,7 @@ shinyUI(navbarPage("Trees in New York",id="nav",
                              actionButton("submit","Mark"),
                              helpText("Choose Your Favorite Tree"),
                              checkboxInput("Status","Only Alive"),
-                             selectInput("Tree","Your Favorite Tree",Types, multiple = T),
+                             selectInput("Tree","Your Favorite Tree",Types, multiple = T,selected = "Ash"),
  #                            textOutput("text"),
                              submitButton("Apply Changes"),
                              plotOutput("barplot")
