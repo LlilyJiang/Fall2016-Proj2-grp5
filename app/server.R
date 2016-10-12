@@ -213,10 +213,16 @@ shinyServer(function(input, output) {
   output$piechart <- renderPlotly({
     healthcattable<-filter(cat_data, category==input$Tree2) %>%
       select(Fair.health,Poor.health)
-    
+    ax <- list(
+      title = "",
+      zeroline = FALSE,
+      showline = FALSE,
+      showticklabels = FALSE,
+      showgrid = FALSE
+    )
     healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
     plot_ly(healthcattable, labels = c("Poor", "Fair", "Good"), values = unlist(healthcattable),type = "pie") %>%
-      layout(title = "Health Condition for the Selected Trees")
+      layout(title = "Health Condition for the Selected Trees",xaxis = ax, yaxis = ax)
   })
   
   #########################################Text Mining###################################
