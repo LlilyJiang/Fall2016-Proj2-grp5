@@ -92,21 +92,21 @@ shinyServer(function(input, output) {
 #           'Brch Shoe'=6,
 #           'Sidewalk'=7)
     plot_ly(
-      x = c("Poor", "Fair", "Good"), y = input$variables2,
+      x = list("Poor", "Fair", "Good"), y = input$variables2,
       z = TreeProblems[match(input$variables2,rownames(TreeProblems)),],type = "heatmap"
     )%>%
       layout(xaxis=list(title = "",showticklabels = TRUE),yaxis=list(title = "",showticklabels = TRUE))
   })
   
-  match(c("Root Stone","Trunk Wire"),rownames(TreeProblems))
+#  match(c("Root Stone","Trunk Wire"),rownames(TreeProblems))
   
   output$plot2 <-renderPlotly({
-    plot_ly(HealthData, x = X1, y = input$variables2, type = 'bar', orientation = 'h', name='Poor',
+    plot_ly(HealthData, x = 'X1', y = input$variables2, type = 'bar', orientation = 'h', name='Poor',
             marker = list(color = 'rgba(38, 24, 74, 0.8)',
                           line = list(color = 'rgb(248, 248, 249)'))) %>%
-      add_trace(x = X2, y=input$variables2,type = 'bar',orientation = 'h', name='Fair',marker = list(color = 'rgba(71, 58, 131, 0.8)')) %>%
-      add_trace(x = X3, y=input$variables2,type = 'bar',orientation = 'h', name='Good',marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
-      layout(barmode = 'stack',xaxis=list(title = ""),yaxis=list(title = ""),
+      add_trace(x = 'X2', y=input$variables2,type = 'bar',orientation = 'h', name='Fair',marker = list(color = 'rgba(71, 58, 131, 0.8)')) %>%
+      add_trace(x = 'X3', y=input$variables2,type = 'bar',orientation = 'h', name='Good',marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+      layout(barmode = 'stack', #xaxis=list(title = ""),yaxis=list(title = ""),
              paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
              #margin = list(l = 120, r = 10, t = 140, b = 80),
              showlegend = TRUE)  
@@ -211,7 +211,7 @@ shinyServer(function(input, output) {
   })
   
   output$piechart <- renderPlotly({
-    healthcattable<-filter(cat_data, category==input$Tree2)%>%
+    healthcattable<-filter(cat_data, category==input$Tree2) %>%
       select(Fair.health,Poor.health)
     
     healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
@@ -283,15 +283,23 @@ shinyServer(function(input, output) {
       else NULL
     })
     
-    output$tb <-  renderTable({   
-      data.frame(ID=1:length(namemap), Name = gsub(".txt"," ",namemap))
-    })
-    
-    output$test<-renderUI({
-      tn<-gsub("\\..*","",namemap[as.integer(input$treename)])
-      pn=paste0(tn,".png")
-      tags$img(src = pn)
-    })
   })
   
-})
+  output$tb <-  renderTable({   
+      data.frame(ID=1:length(namemap), Name = gsub(".txt"," ",namemap))
+    })
+  
+  output$test<-renderUI({
+    tn<-gsub("\\..*","",namemap[as.integer(input$treename)])
+    pn=paste0(tn,".png")
+    tags$img(src = pn)
+  })
+  
+#  output$icon <- renderPlot({
+#    tn<-gsub("\\..*","",namemap[as.integer(input$treename)])
+#    pn=paste0(tn,".png")
+#    tags$img(src = pn)
+#  })
+
+  
+  })
