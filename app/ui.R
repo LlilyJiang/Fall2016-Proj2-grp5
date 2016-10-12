@@ -28,23 +28,31 @@ shinyUI(navbarPage("Trees in New York",id="nav",
            #Need corresponding server part
            sidebarLayout(position="right",
              sidebarPanel(
-               conditionalPanel(condition="input.edaPanels==1",
-                                helpText("Fit your model"),
-                                selectInput("variables","Choose one variable:",Problems,selected = "Root Stone")),
-               conditionalPanel(condition="input.edaPanels==2",
-                                helpText("Choose the Problem"),
-                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems),
-                                submitButton("Apply changes"))
+               h3(""),
+               helpText("Choose the problems you want to analyze"),
+               checkboxGroupInput("variables2","Choose at least 2 Components:",Problems),
+               submitButton("Apply changes")
+#              conditionalPanel(condition="input.edaPanels==1",
+#                                helpText("Fit your model")
+#                                selectInput("variables","Choose one variable:",Problems,selected = "Root Stone")
+#                                ),
+#               conditionalPanel(condition="input.edaPanels==2",
+#                                helpText("Choose the Problem You want to analyze"),
+#                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems)
+#                                )
              ),
              mainPanel(
-               tabsetPanel(type="pill",
-                           tabPanel("Overview",
-                                    plotlyOutput("plot1",width=600),value=1
-                                    ),
-                           tabPanel("Ananysis of Effects between different Elements",
-                                    plotlyOutput("plot2"),value=2),
-                           id="edaPanels"
-                           )
+               h3("Analysis of different elements"),
+               plotlyOutput("plot1",width=600,height = 300),
+               plotlyOutput("plot2",width=600,height = 300)
+#               tabsetPanel(type="pill",
+#                           tabPanel("Overview",
+#                                    plotlyOutput("plot1",width=600),value=1
+#                                    ),
+#                           tabPanel("Ananysis of Effects between different Elements",
+#                                    plotlyOutput("plot2"),value=2),
+#                           id="edaPanels"
+#                           )
              )
            )),
   tabPanel("Clustering",

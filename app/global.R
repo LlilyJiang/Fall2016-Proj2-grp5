@@ -3,7 +3,6 @@ library(shinydashboard)
 library(leaflet)
 library(XML)
 library(zipcode)
-library(dplyr)
 library(plotly)
 library(choroplethr)
 library(dplyr)
@@ -17,6 +16,8 @@ library(reshape2)
 
 #Load data
 Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
+HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
+zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
 
 #Trees=Trees[sample(dim(Trees)[1],100000),]
 #names(Trees)
@@ -54,7 +55,7 @@ Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
 #dim(zip_data)
 #head(zip_data)
 #write.csv(zip_data,file="~/Fall 2016/GR5243/Project2/zip_data.csv",row.names = F)
-zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
+
 #########################################################################################################
 Types=names(summary(Trees$category))
 Variables=c("Harmful Guards","Sidewalk Damage","rootstone","rootgrate","rootother","trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
@@ -130,7 +131,7 @@ rownames(TreeNOProblems)<-c('root_stone','root_grate','trnk_wire',
 #class(rowtree)
 #HealthData<-data.frame(rowtree,TreeProblems)
 #write.csv(HealthData,file="~/Fall 2016/GR5243/Project2/HealthData.csv",row.names = F)
-HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
+
 Problems<-c('Root Stone','Root Grate','Trunk Wire',
             'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
 #plot_ly(HealthData, x = X1, y = rowtree, type = 'bar', orientation = 'h', name='Poor',
