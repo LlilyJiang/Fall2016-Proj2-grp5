@@ -8,21 +8,27 @@ library(choroplethr)
 library(dplyr)
 library(ggplot2)
 library(devtools)
+#install_github('arilamstein/choroplethrZip@v1.3.0')
 library(choroplethrZip)
 library(mapproj)
 library(stringr)
 library(reshape2)
+library(NLP)
+library(tm) 
+library(proxy) 
 
 
 #Load data
-Trees=read.csv("/Users/monicatao/trees_classified.csv",header=T)
-HealthData <- read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/app/HealthData.csv",header=T)
-zip_data=read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/app/zip_data.csv",header=T)
-cat_data=read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/data/cat_data.csv",header=T)
+Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
+HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
+zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
+cat_data=read.csv("~/Fall 2016/GR5243/Project2/cat_data.csv",header=T)
+treepath="~/Fall 2016/GR5243/Project2/tree/"
+namemap <- list.files(treepath)
 
 #Trees=Trees[sample(dim(Trees)[1],100000),]
 #names(Trees)
-
+colnames(HealthData)
 
 #########################################################################################################
 #Create dataset used for kmeans
@@ -77,7 +83,7 @@ cat_data=read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/d
 #  a1=tally(temp[temp$root_stone=="No",])
 #  a2=tally(temp[temp$root_grate=="No",])
 #  a3=tally(temp[temp$root_other=="No",])
-#  a4=tally(temp[temp$trnk_wire=="No",])
+#  a4=tally(temp[temp$trunk_wire=="No",])
 #  a5=tally(temp[temp$trnk_light=="No",])
 #  a6=tally(temp[temp$trnk_other=="No",])
 #  a7=tally(temp[temp$brch_light=="No",])
@@ -161,8 +167,9 @@ rownames(TreeNOProblems)<-c('Root Stone','Root Grate','Trunk Wire',
                              'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
 ##### bar plot to compare the health percent of tree in BAD CONDITION between different problem causes ######
 
-#rowtree<-rownames(TreeProblems)
-#top_labels <- c('Poor', 'Fair', 'Good')
+rowtree<-rownames(TreeProblems)
+colnames(TreeProblems) <- c("Poor","Fair","Good")
+top_labels <- c('Poor', 'Fair', 'Good')
 #class(rowtree)
 #HealthData<-data.frame(rowtree,TreeProblems)
 #write.csv(HealthData,file="~/Fall 2016/GR5243/Project2/HealthData.csv",row.names = F)

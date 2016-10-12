@@ -2,9 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 
-shinyUI(navbarPage(theme = shinytheme("flatly"),
-  
-  "Trees in New York",id="nav",
+shinyUI(navbarPage("Trees in New York",id="nav",
                    
   tabPanel("New York",
            div(class="outer",
@@ -19,10 +17,10 @@ shinyUI(navbarPage(theme = shinytheme("flatly"),
                              actionButton("submit","Mark"),
                              helpText("Choose Your Favorite Tree"),
                              checkboxInput("Status","Only Alive"),
-                             selectInput("Tree","Your Favorite Tree",Types, multiple = T,selected = "Ash"),
+                             selectInput("Tree","Your Favorite Tree",Types, multiple = T,selected = "Ash")
  #                            textOutput("text"),
-                             submitButton("Apply Changes"),
-                             plotOutput("barplot")
+ #                            submitButton("Apply Changes")
+                             
                              ))
             
   ),
@@ -30,25 +28,29 @@ shinyUI(navbarPage(theme = shinytheme("flatly"),
            #Need corresponding server part
            sidebarLayout(position="right",
              sidebarPanel(
-               conditionalPanel(condition="input.edaPanels==2",
-                                helpText("Select the Tree you want to analysze"),
-                                selectInput("Tree2","Choose one Tree:",Types,selected = "Ash"),
-                                submitButton("Apply Changes")
-                                ),
-               conditionalPanel(condition="input.edaPanels==1",
+               conditionalPanel(condition="input.edapanels==1",
                                 helpText("Select the Problem You want to analyze"),
                                 checkboxGroupInput("variables2","Choose at least 2 Components:",
-                                                   Problems,selected = c("Root Stone", "Root Grate","Trunk Wire")),
-                                submitButton("Apply Changes")
+                                                   Problems,selected = c("Root Stone", "Root Grate","Trunk Wire"))
+   #                             submitButton("Apply Changes")
+                                ),
+               conditionalPanel(condition="input.edapanels==2",
+                                helpText("Select the Tree you want to analysze"),
+                                selectInput("Tree2","Choose one Tree:",Types,selected = "Maple"),
+                         #       submitButton("Apply Changes"),
+                                hr(),
+                                plotlyOutput("piechart")
                                 )
+               
              ),
              mainPanel(
-               tabsetPanel(type="pill",id="edaPanels",
+               tabsetPanel(type="pill",id="edapanels",
                            tabPanel("Analysis of diferrent problems",
-                                    plotlyOutput("plot1",width= 600 , height = 300),
-                                    plotlyOutput("plot2",width= 600 , height = 300),value=1),
+                                    plotlyOutput("plot1",width= 800 , height = 300),
+                                    plotlyOutput("plot2",width= 800 , height = 300),value=1),
                            tabPanel("Ananysis of one Tree",
                                     plotlyOutput("plot3"),value=2)
+                                    
                            
                            )
              )
@@ -59,7 +61,7 @@ shinyUI(navbarPage(theme = shinytheme("flatly"),
                          sidebarPanel(
                            h3("Select the number of clusters"),
                            selectInput("k","Number of clusters:",choices = list('3','4','5'),selected = '3'),
-                           submitButton("Apply Changes"),
+     #                      submitButton("Apply Changes"),
                            plotOutput("summary")
 #                           selectInput("method","Methods for Clustering:",choices=list('Kmeans','Hierarchical Clustering'))
 
@@ -94,7 +96,9 @@ shinyUI(navbarPage(theme = shinytheme("flatly"),
                         the number id for each type of trees and Enter tree IDs seperated by &,eg: 1&12&38"),
                textInput("tt", label = h3("Similarites based Hierarchy cluster among selected trees"), 
                          value = "1&12&38&49&23&21&11&70"),  
-               submitButton(h3("Query"))
+      #         submitButton(h3("Query"))
+               actionButton("submit2","Query")
+  
                ),                                   
              
              mainPanel( 
@@ -107,7 +111,6 @@ shinyUI(navbarPage(theme = shinytheme("flatly"),
              )               
              
              
-            )
-           )
+  ))
 ))
 

@@ -77,6 +77,10 @@ shinyServer(function(input, output) {
 #   })
   })
   
+#  vv <-reactive({
+#    return(input$variables2)
+#  })
+  
   output$plot1 <- renderPlotly({
     
 #    row=switch(input$variables2,
@@ -94,6 +98,7 @@ shinyServer(function(input, output) {
       layout(xaxis=list(title = "",showticklabels = TRUE),yaxis=list(title = "",showticklabels = TRUE))
   })
   
+  match(c("Root Stone","Trunk Wire"),rownames(TreeProblems))
   
   output$plot2 <-renderPlotly({
     plot_ly(HealthData, x = X1, y = input$variables2, type = 'bar', orientation = 'h', name='Poor',
@@ -101,7 +106,7 @@ shinyServer(function(input, output) {
                           line = list(color = 'rgb(248, 248, 249)'))) %>%
       add_trace(x = X2, y=input$variables2,type = 'bar',orientation = 'h', name='Fair',marker = list(color = 'rgba(71, 58, 131, 0.8)')) %>%
       add_trace(x = X3, y=input$variables2,type = 'bar',orientation = 'h', name='Good',marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
-      layout(barmode = 'stack',
+      layout(barmode = 'stack',xaxis=list(title = ""),yaxis=list(title = ""),
              paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
              #margin = list(l = 120, r = 10, t = 140, b = 80),
              showlegend = TRUE)  
@@ -195,63 +200,93 @@ shinyServer(function(input, output) {
     p1 
   })
   
+  output$plot3 <- renderPlotly({
+    problemtable<-filter(cat_data, category==input$Tree2)%>%
+      select(rootstone,rootgrate,trunkwire,trnklight,brchlight,brchshoe,Sidewalk.Damage)
+    
+    x=c('root_stone','root_grate','trnk_wire','trnk_light','brch_light','brch_shoe','sidewalk')
+    y=unlist(problemtable)
+    plot_ly(x=x,y=y,type = 'bar',orientation = 'v')%>%
+      layout(yaxis = list(title = 'Percent'),xaxis = list(title = ''),title = "Conditions of the Selected Tree")
+  })
+  
+  output$piechart <- renderPlotly({
+    healthcattable<-filter(cat_data, category==input$Tree2)%>%
+      select(Fair.health,Poor.health)
+    
+    healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
+    plot_ly(healthcattable, labels = c("Poor", "Fair", "Good"), values = unlist(healthcattable),type = "pie") %>%
+      layout(title = "Health Condition for the Selected Trees")
+  })
+  
+  #########################################Text Mining###################################
   output$desc <-  renderText({   
-    treefile <- paste0("/Users/monicatao/Documents/ads/project2/tree/",namemap[as.integer(input$treename)])
+    treefile <- paste0(treepath,namemap[as.integer(input$treename)])
     desc <- readLines(treefile)
     desc
   })
   
   
-  output$cd <-  renderTable({   
-    trees <- strsplit(input$tt, split = "&")[[1]]
-    trees <- namemap[as.integer(trees)]
-    treefiles <- paste0("/Users/monicatao/Documents/ads/project2/tree/",trees)
-    ss <- sapply(treefiles, readLines)
-    corpus  <- Corpus(VectorSource(ss),
-                      readerControl = list(blank.lines.skip=TRUE))
-    #some preprocessing
-    corpus <- tm_map(corpus, removeWords, stopwords("english"))
-    corpus <- tm_map(corpus, stripWhitespace)
-    corpus <- tm_map(corpus, removePunctuation)
+  observeEvent(input$submit2,{
+    output$cd <-  renderTable({   
+      trees <- strsplit(input$tt, split = "&")[[1]]
+      
+      treefiles <- paste0(treepath,namemap)
+      ss <- sapply(treefiles, readLines)
+      corpus  <- Corpus(VectorSource(ss),
+                        readerControl = list(blank.lines.skip=TRUE))
+      #some preprocessing
+      corpus <- tm_map(corpus, removeWords, stopwords("english"))
+      corpus <- tm_map(corpus, stripWhitespace)
+      corpus <- tm_map(corpus, removePunctuation)
+      
+      
+      #creating term matrix with TF-IDF weighting
+      terms <- DocumentTermMatrix(corpus,
+                                  control = list(weighting = function(x) weightTfIdf(x, normalize = FALSE)))
+      dtm <- removeSparseTerms(terms, sparse = 0.6)
+      mat <- as.matrix(dtm)
+      res <- dist(mat, method = "cosine")
+      res2 <- round(as.matrix(res),5)
+      diag(res2) <- 1
+      res <- data.frame(res2)
+      res$name <- gsub(".txt"," ",namemap)
+      colnames(res) <- c(gsub(".txt"," ",namemap)," ")
+      res[as.integer(trees),as.integer(trees)]
+      
+      
+      
+      
+    })
+    output$fig <-  renderPlot({   
+      trees <- strsplit(input$tt, split = "&")[[1]]
+      trees <- namemap[as.integer(trees)]
+      treefiles <- paste0(treepath,trees)
+      ss <- sapply(treefiles, readLines)
+      corpus  <- Corpus(VectorSource(ss),
+                        readerControl = list(blank.lines.skip=TRUE))
+      #some preprocessing
+      corpus <- tm_map(corpus, removeWords, stopwords("english"))
+      corpus <- tm_map(corpus, stripWhitespace)
+      corpus <- tm_map(corpus, removePunctuation)
+      
+      
+      #creating term matrix with TF-IDF weighting
+      terms <- DocumentTermMatrix(corpus,
+                                  control = list(weighting = function(x) weightTfIdf(x, normalize = FALSE)))
+      dtm <- removeSparseTerms(terms, sparse = 0.6)
+      mat <- as.matrix(dtm)
+      res <- dist(mat, method = "cosine")
+      res <- 1-res
+      if(dim(res)[1] > 2)
+        plot(hclust(res),labels = gsub(".txt"," ",trees),xlab = " ")
+      else NULL
+    })
     
+    output$tb <-  renderTable({   
+      data.frame(ID=1:length(namemap), Name = gsub(".txt"," ",namemap))
+    })
     
-    #creating term matrix with TF-IDF weighting
-    terms <- DocumentTermMatrix(corpus,
-                                control = list(weighting = function(x) weightTfIdf(x, normalize = FALSE)))
-    dtm <- removeSparseTerms(terms, sparse = 0.6)
-    mat <- as.matrix(dtm)
-    res <- dist(mat, method = "cosine")
-    res2 <- round(as.matrix(res),5)
-    diag(res2) <- 1
-    res <- data.frame(res2)
-    res$name <- gsub(".txt"," ",trees)
-    colnames(res) <- c(gsub(".txt"," ",trees)," ")
-    res
-  })
-  output$fig <-  renderPlot({   
-    trees <- strsplit(input$tt, split = "&")[[1]]
-    trees <- namemap[as.integer(trees)]
-    treefiles <- paste0("/Users/monicatao/Documents/ads/project2/tree/",trees)
-    ss <- sapply(treefiles, readLines)
-    corpus  <- Corpus(VectorSource(ss),
-                      readerControl = list(blank.lines.skip=TRUE))
-    #some preprocessing
-    corpus <- tm_map(corpus, removeWords, stopwords("english"))
-    corpus <- tm_map(corpus, stripWhitespace)
-    corpus <- tm_map(corpus, removePunctuation)
-    
-    
-    #creating term matrix with TF-IDF weighting
-    terms <- DocumentTermMatrix(corpus,
-                                control = list(weighting = function(x) weightTfIdf(x, normalize = FALSE)))
-    dtm <- removeSparseTerms(terms, sparse = 0.6)
-    mat <- as.matrix(dtm)
-    res <- dist(mat, method = "cosine")
-    res <- 1-res
-    plot(hclust(res),labels = gsub(".txt"," ",trees),xlab = " ")
-  })
-  output$tb <-  renderTable({   
-    data.frame(ID=1:length(namemap), Name = gsub(".txt"," ",namemap))
   })
   
 })
