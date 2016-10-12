@@ -112,7 +112,12 @@ plot_ly(
 #cor(treedata$root_grate,treedata$root_stone)
 
 
-###### pie chart ######
+
+
+
+
+###########################LAST UPDATE###########################
+###### two pie charts for YES and NO ######
 Problem_Yes<-TreeProblems[1,]
 Problem_Yes<-data.frame(Problem_Yes)
 rownames(Problem_Yes)=c("Poor", "Fair", "Good")
@@ -129,7 +134,7 @@ plot_ly(data=Problem_No, labels = c("Poor", "Fair", "Good"), values = Problem_No
   layout(title = "Health for Trees WITHOUT the problem")
   
 
-###########################LAST UPDATE###########################
+######## based on the data set by tree category ########
 TreeByCat<-read.csv("cat_data.csv")
 
 ### bar chart to compare percent of trees different problems
