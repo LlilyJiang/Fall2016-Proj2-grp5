@@ -3,14 +3,14 @@
 
 Term: Fall 2016
 
-+ Team #
-+ Projec title: Lorem ipsum dolor sit amet
++ Team #5
++ Projec title: New York City Trees
 + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
+	+ Wenhang Bao
+	+ Yanxi Chen
+	+ Kanghui Jiang
+	+ Mengyuan Tao
+	+ Jiayu Wang
 	
 + Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
