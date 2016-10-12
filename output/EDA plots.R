@@ -99,3 +99,12 @@ plot_ly(HealthData2, x=ProblemPresence, y = Poor, type = 'bar', name = 'Poor') %
   add_trace(x=ProblemPresence,y = Good, type = 'bar',name = 'Good') %>%
   layout(yaxis = list(title = 'Percent'),xaxis = list(title = 'Precense of Problem'), barmode = 'stack')
 
+
+######## Heatmap #######
+plot_ly(
+  x = c("Poor", "Fair", "Good"), y = rownames(TreeProblems),
+  z = TreeProblems,type = "heatmap"
+)%>%
+  layout(xaxis=list(title = "",showticklabels = TRUE),yaxis=list(title = "",showticklabels = TRUE))
+
+
