@@ -28,31 +28,27 @@ shinyUI(navbarPage("Trees in New York",id="nav",
            #Need corresponding server part
            sidebarLayout(position="right",
              sidebarPanel(
-               h3(""),
-               helpText("Choose the problems you want to analyze"),
-               checkboxGroupInput("variables2","Choose at least 2 Components:",Problems),
-               submitButton("Apply changes")
-#              conditionalPanel(condition="input.edaPanels==1",
-#                                helpText("Fit your model")
-#                                selectInput("variables","Choose one variable:",Problems,selected = "Root Stone")
-#                                ),
-#               conditionalPanel(condition="input.edaPanels==2",
-#                                helpText("Choose the Problem You want to analyze"),
-#                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems)
-#                                )
+               conditionalPanel(condition="input.edaPanels==2",
+                                helpText("Select the Tree you want to analysze"),
+                                selectInput("Tree2","Choose one Tree:",Types,selected = "Ash"),
+                                submitButton("Apply Changes")
+                                ),
+               conditionalPanel(condition="input.edaPanels==1",
+                                helpText("Select the Problem You want to analyze"),
+                                checkboxGroupInput("variables2","Choose at least 2 Components:",
+                                                   Problems,selected = c("Root Stone", "Root Grate","Trunk Wire")),
+                                submitButton("Apply Changes")
+                                )
              ),
              mainPanel(
-               h3("Analysis of different elements"),
-               plotlyOutput("plot1",width=600,height = 300),
-               plotlyOutput("plot2",width=600,height = 300)
-#               tabsetPanel(type="pill",
-#                           tabPanel("Overview",
-#                                    plotlyOutput("plot1",width=600),value=1
-#                                    ),
-#                           tabPanel("Ananysis of Effects between different Elements",
-#                                    plotlyOutput("plot2"),value=2),
-#                           id="edaPanels"
-#                           )
+               tabsetPanel(type="pill",id="edaPanels",
+                           tabPanel("Analysis of diferrent problems",
+                                    plotlyOutput("plot1",width= 600 , height = 300),
+                                    plotlyOutput("plot2",width= 600 , height = 300),value=1),
+                           tabPanel("Ananysis of one Tree",
+                                    plotlyOutput("plot3"),value=2)
+                           
+                           )
              )
            )),
   tabPanel("Clustering",

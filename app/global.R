@@ -18,6 +18,7 @@ library(reshape2)
 Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
 HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
 zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
+cat_data=read.csv("~/Fall 2016/GR5243/Project2/cat_data.csv",header=T)
 
 #Trees=Trees[sample(dim(Trees)[1],100000),]
 #names(Trees)
@@ -30,6 +31,7 @@ zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
 #colnames(zip_data)=c("Zipcode","Fair health","Poor health","Harmful Guards",
 #                     "Helpful Guards","Sidewalk Damage","rootstone","rootgrate","rootother",
 #                     "trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
+
 #ziplist=as.numeric(levels(as.factor(Trees$zipcode)))
 #for (i in ziplist){
 #  temp=Trees[Trees$zipcode==i,]
@@ -57,6 +59,40 @@ zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
 #write.csv(zip_data,file="~/Fall 2016/GR5243/Project2/zip_data.csv",row.names = F)
 
 #########################################################################################################
+#Create dataset used for barplot
+#cat_data=matrix(ncol=15)
+
+#colnames(cat_data)=c("category","Fair health","Poor health","Harmful Guards",
+#                     "Helpful Guards","Sidewalk Damage","rootstone","rootgrate","rootother",
+#                     "trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
+
+#catlist=as.character(levels(as.factor(Trees$category)))
+#for (i in catlist){
+#  temp=Trees[Trees$category==i,]
+#  h1=tally(temp[temp$health=="Fair",])
+#  h2=tally(temp[temp$health=="Poor",])
+#  g1=tally(temp[temp$guards=="Harmful",])
+#  g2=tally(temp[temp$guards=="Helpful",])
+#  s1=tally(temp[temp$sidewalk=="Damage",])
+#  a1=tally(temp[temp$root_stone=="No",])
+#  a2=tally(temp[temp$root_grate=="No",])
+#  a3=tally(temp[temp$root_other=="No",])
+#  a4=tally(temp[temp$trnk_wire=="No",])
+#  a5=tally(temp[temp$trnk_light=="No",])
+#  a6=tally(temp[temp$trnk_other=="No",])
+#  a7=tally(temp[temp$brch_light=="No",])
+#  a8=tally(temp[temp$brch_shoe=="No",])
+#  a9=tally(temp[temp$brch_other=="No",])
+#  b=nrow(temp)
+#  temp=as.vector(c(i,h1/b,h2/b,g1/b,g2/b,s1/b,a1/b,a2/b,a3/b,a4/b,a5/b,a6/b,a7/b,a8/b,a9/b))
+#  cat_data=rbind(cat_data,temp)
+#}
+#cat_data=cat_data[2:nrow(cat_data),]
+
+#head(cat_data)
+#write.csv(cat_data,file="~/Fall 2016/GR5243/Project2/cat_data.csv",row.names = F)
+
+###########################################################################################################
 Types=names(summary(Trees$category))
 Variables=c("Harmful Guards","Sidewalk Damage","rootstone","rootgrate","rootother","trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
 
@@ -119,11 +155,10 @@ treetable<-treetable/rowSums(treetable)
 TreeProblems<-rbind(TreeProblems,treetable[2,])
 TreeNOProblems<-rbind(TreeNOProblems,treetable[1,])
 
-rownames(TreeProblems)<-c('root_stone','root_grate','trnk_wire',
-                          'trnk_light','brch_light','brch_shoe','sidewalk')
-rownames(TreeNOProblems)<-c('root_stone','root_grate','trnk_wire',
-                            'trnk_light','brch_light','brch_shoe','sidewalk')
-
+rownames(TreeProblems)<-c('Root Stone','Root Grate','Trunk Wire',
+                          'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
+rownames(TreeNOProblems)<-c('Root Stone','Root Grate','Trunk Wire',
+                             'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
 ##### bar plot to compare the health percent of tree in BAD CONDITION between different problem causes ######
 
 #rowtree<-rownames(TreeProblems)
