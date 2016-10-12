@@ -19,11 +19,11 @@ library(proxy)
 
 
 #Load data
-Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
-HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
-zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
-cat_data=read.csv("~/Fall 2016/GR5243/Project2/cat_data.csv",header=T)
-treepath="~/Fall 2016/GR5243/Project2/tree/"
+Trees=read.csv("/Users/monicatao/trees_classified.csv",header=T)
+HealthData <- read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/app/HealthData.csv",header=T)
+zip_data=read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/app/zip_data.csv",header=T)
+cat_data=read.csv("/Users/monicatao/Documents/ads/project2/Fall2016-Proj2-grp5/data/cat_data.csv",header=T)
+treepath="/Users/monicatao/Documents/ads/project2/tree/"
 namemap <- list.files(treepath)
 
 #Trees=Trees[sample(dim(Trees)[1],100000),]

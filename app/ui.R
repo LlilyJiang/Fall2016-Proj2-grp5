@@ -2,7 +2,9 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 
-shinyUI(navbarPage("Trees in New York",id="nav",
+shinyUI(navbarPage(theme = shinytheme("flatly"),
+  
+  "Trees in New York",id="nav",
                    
   tabPanel("New York",
            div(class="outer",
@@ -80,24 +82,26 @@ shinyUI(navbarPage("Trees in New York",id="nav",
                                           'Amur Cork Tree'=2,'Arborvitae'=3,'Ash'=4,'Aspen'=5,'Beech'=6,
                                           'Birch'=7,'Boxelder'=8,'Buckeye'=9,'Catalpa'=10,'Cedar'=11,
                                           'Cherry'=12,'Chestnut'=13,'Coffetree'=14,'Cottonwood'=15,'Crabapple'=16,
-                                          'Cypress'=17,'Dogwood'=18,'Douglas-Fir'=19,'Elm'=20,'Elms'=21,
-                                          'Empress Tree'=22,'Fringetree'=23,'Ginkgo'=24,'Gum'=25,'Hackberry'=26,
-                                          'Hardy Rubber Tree Mimosa'=27,'Hawthorn'=28,'Hazelnut'=29,'Heaven'=30,
+                                          'Cypress'=17,'Dogwood'=18,'Douglas Fir'=19,'Elm'=20,'Elms'=21,
+                                          'Empress Tree'=22,'Fringe Tree'=23,'Ginkgo'=24,'Gum'=25,'Hackberry'=26,
+                                          'Hardy Rubber Tree'=27,'Hawthorn'=28,'Hazelnut'=29,'Tree of Heaven'=30,
                                           'Hemlock'=31,'Hickory'=32,'Holly'=33,'hophornbeam'=34,'Hornbeam'=35,
-                                          'inermis'=36,'Ironwood'=37,'Katsura Tree'=38,'Larch'=39,'Linden'=40,
+                                          'Inermis'=36,'Ironwood'=37,'Katsura'=38,'Larch'=39,'Linden'=40,
                                           'Locust(Black Locust)'=41,'Maackia'=42,'Magnolia'=43,'Maple'=44,
-                                          'Mulberry'=45,'Myrtle'=46,'Oak'=47,'Orange'=48,'pear'=49,'Pine'=50,
+                                          'Mulberry'=45,'Myrtle'=46,'Oak'=47,'Orange'=48,'Pear'=49,'Pine'=50,
                                           'Planetree'=51,'Plum'=52,'Poplar'=53,'Raintree'=54,'Redbud'=55,
                                           'Redcedar'=56,'Redwood'=57,'Sassafras'=58,'Serviceberry'=59,
                                           'Silverbell'=60,'Smoketree'=61,'Snowbell'=62,'Sophora'=63,
-                                          'Spruce'=64,'Sweetgum'=65,'Treelilac'=66,'Walnut'=67,
+                                          'Spruce'=64,'Sweetgum'=65,'Tree Lilac'=66,'Walnut'=67,
                                           'Willow'=68,'Yellowwood'=69,'Zelkova'=70), selected = 1),
                helpText("Please refer 'Trees ID-Name table' panel to see
                         the number id for each type of trees and Enter tree IDs seperated by &,eg: 1&12&38"),
                textInput("tt", label = h3("Similarites based Hierarchy cluster among selected trees"), 
                          value = "1&12&38&49&23&21&11&70"),  
       #         submitButton(h3("Query"))
-               actionButton("submit2","Query")
+               actionButton("submit2","Query"),
+      
+               actionButton("go",uiOutput('test'))
   
                ),                                   
              

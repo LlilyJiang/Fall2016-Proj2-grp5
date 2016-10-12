@@ -287,6 +287,11 @@ shinyServer(function(input, output) {
       data.frame(ID=1:length(namemap), Name = gsub(".txt"," ",namemap))
     })
     
+    output$test<-renderUI({
+      tn<-gsub("\\..*","",namemap[as.integer(input$treename)])
+      pn=paste0(tn,".png")
+      tags$img(src = pn)
+    })
   })
   
 })
