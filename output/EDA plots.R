@@ -153,4 +153,5 @@ healthcattable<-filter(TreeByCat, category=='Ash')%>%
 
 healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
 plot_ly(healthcattable, labels = c("Poor", "Fair", "Good"), values = unlist(healthcattable),type = "pie") %>%
-  layout(title = "Health Condition for the Selected Trees")
+  layout(title = "Health Condition for the Selected Trees",zeroline = FALSE,showline = FALSE,showticklabels = FALSE,showgrid = FALSE)
+
