@@ -143,7 +143,8 @@ problemtable<-filter(TreeByCat, category=='Ash')%>%
 
 x=c('root_stone','root_grate','trnk_wire','trnk_light','brch_light','brch_shoe','sidewalk')
 y=unlist(problemtable)
-plot_ly(x=x,y=y,type = 'bar',orientation = 'v')%>%
+plot_ly(x=x,y=y,type = 'bar',orientation = 'v',
+        marker = list(color = c('rgba(176,224,230,1)', 'rgba(173,216,230,1)','rgba(135,206,235,1)','rgba(0,191,255,1)','rgba(30,144,255,1)','rgba(100,149,237,1)','rgba(65,105,225,1)')))%>%
   layout(yaxis = list(title = 'Percent'),xaxis = list(title = ''),title = "Problems for the Selected Trees")
 
 
@@ -154,4 +155,12 @@ healthcattable<-filter(TreeByCat, category=='Ash')%>%
 healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
 plot_ly(healthcattable, labels = c("Poor", "Fair", "Good"), values = unlist(healthcattable),type = "pie") %>%
   layout(title = "Health Condition for the Selected Trees",zeroline = FALSE,showline = FALSE,showticklabels = FALSE,showgrid = FALSE)
+
+
+
+#################bar plot color updates ################
+
+plot_ly(x=x,y=y,type = 'bar',orientation = 'v',
+        marker = list(color = c('rgba(176,224,230,1)', 'rgba(173,216,230,1)','rgba(135,206,235,1)','rgba(0,191,255,1)','rgba(30,144,255,1)','rgba(100,149,237,1)','rgba(65,105,225,1)')))%>%
+  layout(yaxis = list(title = 'Percent'),xaxis = list(title = ''),title = "Problems for the Selected Trees")
 
