@@ -84,6 +84,8 @@ plot_ly(HealthData, x = X1, y = rowtree, type = 'bar', orientation = 'h', name='
          xaxis=list(title = ""),yaxis=list(title = ""))  
 
 
+
+
 ##### bar plot to compare the health status with or without a single cause
 
 ProblemPresence<-c('Yes', 'No')
@@ -107,4 +109,43 @@ plot_ly(
 )%>%
   layout(xaxis=list(title = "",showticklabels = TRUE),yaxis=list(title = "",showticklabels = TRUE))
 
+#cor(treedata$root_grate,treedata$root_stone)
 
+
+###### pie chart ######
+Problem_Yes<-TreeProblems[1,]
+Problem_Yes<-data.frame(Problem_Yes)
+rownames(Problem_Yes)=c("Poor", "Fair", "Good")
+
+Problem_No<-TreeNOProblems[1,]
+Problem_No<-data.frame(Problem_No)
+rownames(Problem_No)=c("Poor", "Fair", "Good")
+
+
+plot_ly(Problem_Yes, labels = c("Poor", "Fair", "Good"), values = Problem_Yes,type = "pie") %>%
+  layout(title = "Health for Trees WITH the problem")
+
+plot_ly(data=Problem_No, labels = c("Poor", "Fair", "Good"), values = Problem_No,type = "pie") %>%
+  layout(title = "Health for Trees WITHOUT the problem")
+  
+
+###########################LAST UPDATE###########################
+TreeByCat<-read.csv("cat_data.csv")
+
+### bar chart to compare percent of trees different problems
+problemtable<-filter(TreeByCat, category=='Ash')%>%
+  select(rootstone,rootgrate,trunkwire,trnklight,brchlight,brchshoe,Sidewalk.Damage)
+
+x=c('root_stone','root_grate','trnk_wire','trnk_light','brch_light','brch_shoe','sidewalk')
+y=unlist(problemtable)
+plot_ly(x=x,y=y,type = 'bar',orientation = 'v')%>%
+  layout(yaxis = list(title = 'Percent'),xaxis = list(title = ''),title = "Problems for the Selected Trees")
+
+
+###pie chart
+healthcattable<-filter(TreeByCat, category=='Ash')%>%
+  select(Fair.health,Poor.health)
+
+healthcattable$Good.health=1-healthcattable$Fair.health-healthcattable$Poor.health
+plot_ly(healthcattable, labels = c("Poor", "Fair", "Good"), values = unlist(healthcattable),type = "pie") %>%
+  layout(title = "Health Condition for the Selected Trees")
