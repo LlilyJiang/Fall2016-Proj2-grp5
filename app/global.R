@@ -16,42 +16,44 @@ library(stringr)
 
 #Load data
 Trees=read.csv("~/Fall 2016/GR5243/Project2/trees_classified.csv",header=T)
-names(Trees)
-Trees2=Trees[,c(8,9,11,37,38)]
+
+#Trees=Trees[sample(dim(Trees)[1],100000),]
 #names(Trees)
+
 
 #########################################################################################################
 #Create dataset used for kmeans
-zip_data=matrix(ncol=15)
+#zip_data=matrix(ncol=15)
 
-colnames(zip_data)=c("Zipcode","Fair health","Poor health","Harmful Guards",
-                     "Helpful Guards","Sidewalk Damage","rootstone","rootgrate","rootother",
-                     "trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
-ziplist=as.numeric(levels(as.factor(Trees$zipcode)))
-for (i in ziplist){
-  temp=Trees[Trees$zipcode==i,]
-  h1=tally(temp[temp$health=="Fair",])
-  h2=tally(temp[temp$health=="Poor",])
-  g1=tally(temp[temp$guards=="Harmful",])
-  g2=tally(temp[temp$guards=="Helpful",])
-  s1=tally(temp[temp$sidewalk=="Damage",])
-  a1=tally(temp[temp$root_stone=="No",])
-  a2=tally(temp[temp$root_grate=="No",])
-  a3=tally(temp[temp$root_other=="No",])
-  a4=tally(temp[temp$trnk_wire=="No",])
-  a5=tally(temp[temp$trnk_light=="No",])
-  a6=tally(temp[temp$trnk_other=="No",])
-  a7=tally(temp[temp$brch_light=="No",])
-  a8=tally(temp[temp$brch_shoe=="No",])
-  a9=tally(temp[temp$brch_other=="No",])
-  b=nrow(temp)
-  temp=as.vector(c(i,h1/b,h2/b,g1/b,g2/b,s1/b,a1/b,a2/b,a3/b,a4/b,a5/b,a6/b,a7/b,a8/b,a9/b))
-  zip_data=rbind(zip_data,temp)
-}
-zip_data=zip_data[2:nrow(zip_data),]
-
-
-
+#colnames(zip_data)=c("Zipcode","Fair health","Poor health","Harmful Guards",
+#                     "Helpful Guards","Sidewalk Damage","rootstone","rootgrate","rootother",
+#                     "trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
+#ziplist=as.numeric(levels(as.factor(Trees$zipcode)))
+#for (i in ziplist){
+#  temp=Trees[Trees$zipcode==i,]
+#  h1=tally(temp[temp$health=="Fair",])
+#  h2=tally(temp[temp$health=="Poor",])
+#  g1=tally(temp[temp$guards=="Harmful",])
+#  g2=tally(temp[temp$guards=="Helpful",])
+#  s1=tally(temp[temp$sidewalk=="Damage",])
+#  a1=tally(temp[temp$root_stone=="No",])
+#  a2=tally(temp[temp$root_grate=="No",])
+#  a3=tally(temp[temp$root_other=="No",])
+#  a4=tally(temp[temp$trnk_wire=="No",])
+#  a5=tally(temp[temp$trnk_light=="No",])
+#  a6=tally(temp[temp$trnk_other=="No",])
+#  a7=tally(temp[temp$brch_light=="No",])
+#  a8=tally(temp[temp$brch_shoe=="No",])
+#  a9=tally(temp[temp$brch_other=="No",])
+#  b=nrow(temp)
+#  temp=as.vector(c(i,h1/b,h2/b,g1/b,g2/b,s1/b,a1/b,a2/b,a3/b,a4/b,a5/b,a6/b,a7/b,a8/b,a9/b))
+#  zip_data=rbind(zip_data,temp)
+#}
+#zip_data=zip_data[2:nrow(zip_data),]
+#dim(zip_data)
+#head(zip_data)
+#write.csv(zip_data,file="~/Fall 2016/GR5243/Project2/zip_data.csv",row.names = F)
+zip_data=read.csv("~/Fall 2016/GR5243/Project2/zip_data.csv",header=T)
 #########################################################################################################
 Types=names(summary(Trees$category))
 Variables=c("Harmful Guards","Sidewalk Damage","rootstone","rootgrate","rootother","trunkwire","trnklight","trnkother","brchlight","brchshoe","brchother")
@@ -59,7 +61,7 @@ Variables=c("Harmful Guards","Sidewalk Damage","rootstone","rootgrate","rootothe
 ############################################################################################################
 #Processing Tree
 treedata <- Trees[!(Trees$health == "N.A."), ]
-
+head(treedata)
 ### factor into integer
 treedata$root_stone<-as.integer(treedata$root_stone=='Yes')
 treedata$root_grate<-as.integer(treedata$root_grate=='Yes')
@@ -68,8 +70,6 @@ treedata$trnk_light<-as.integer(treedata$trnk_light=='Yes')
 treedata$brch_light<-as.integer(treedata$brch_light=='Yes')
 treedata$brch_shoe<-as.integer(treedata$brch_shoe=='Yes')
 treedata$sidewalk<-as.integer(treedata$sidewalk=='Damage')
-#treedata$guards<-factor(treedata$guards, levels = c("Unsure","Harmful","None","Helpful"),labels= c("1","2","3","4"))
-#treedata$guards<-as.integer(treedata$guards)
 treedata$health<-factor(treedata$health, levels = c("Poor","Fair","Good"),labels= c("1","2","3"))
 treedata$health<-as.integer(treedata$health)
 head(treedata)
@@ -124,11 +124,12 @@ rownames(TreeNOProblems)<-c('root_stone','root_grate','trnk_wire',
 
 ##### bar plot to compare the health percent of tree in BAD CONDITION between different problem causes ######
 
-rowtree<-rownames(TreeProblems)
-top_labels <- c('Poor', 'Fair', 'Good')
-class(rowtree)
-HealthData<-data.frame(rowtree,TreeProblems)
-class(HealthData$rowtree)
+#rowtree<-rownames(TreeProblems)
+#top_labels <- c('Poor', 'Fair', 'Good')
+#class(rowtree)
+#HealthData<-data.frame(rowtree,TreeProblems)
+#write.csv(HealthData,file="~/Fall 2016/GR5243/Project2/HealthData.csv",row.names = F)
+HealthData <- read.csv("~/Fall 2016/GR5243/Project2/HealthData.csv",header=T)
 Problems<-c('Root Stone','Root Grate','Trunk Wire',
             'Trunk Light','Brch Light','Brch Shoe','Sidewalk')
 #plot_ly(HealthData, x = X1, y = rowtree, type = 'bar', orientation = 'h', name='Poor',
@@ -159,14 +160,3 @@ data(df_pop_zip)
 
 #zip_data$kmcluster<-km.res$cluster
 
-vn=switch('Root Stone',
-          'Root Stone'="1",
-          'Root Grate'="2",
-          'Trunk Wire'="3",
-          'Trunk Light'="4",
-          'Brch Light'="5",
-          'Brch Shoe'="6",
-          'Sidewalk'=7    
-)
-vn=as.numeric(vn)
-vn

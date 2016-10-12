@@ -18,8 +18,8 @@ shinyUI(navbarPage("Trees in New York",id="nav",
                              helpText("Choose Your Favorite Tree"),
                              checkboxInput("Status","Only Alive"),
                              selectInput("Tree","Your Favorite Tree",Types, multiple = T),
-#                             textOutput("text"),
-#                             submitButton("Apply Changes"),
+ #                            textOutput("text"),
+                             submitButton("Apply Changes"),
                              plotOutput("barplot")
                              ))
             
@@ -33,13 +33,14 @@ shinyUI(navbarPage("Trees in New York",id="nav",
                                 selectInput("variables","Choose one variable:",Problems,selected = "Root Stone")),
                conditionalPanel(condition="input.edaPanels==2",
                                 helpText("Choose the Problem"),
-                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems)),
-                                submitButton("Apply changes")
+                                checkboxGroupInput("variables2","Choose at least 2 Components:",Problems),
+                                submitButton("Apply changes"))
              ),
              mainPanel(
                tabsetPanel(type="pill",
-                           tabPanel("Ananysis of One Element to Health",
-                                    plotlyOutput("plot1"),value=1),
+                           tabPanel("Overview",
+                                    plotlyOutput("plot1",width=600),value=1
+                                    ),
                            tabPanel("Ananysis of Effects between different Elements",
                                     plotlyOutput("plot2"),value=2),
                            id="edaPanels"
@@ -51,8 +52,11 @@ shinyUI(navbarPage("Trees in New York",id="nav",
            sidebarLayout(position="right",
                          sidebarPanel(
                            h3("Select the number of clusters"),
-                           selectInput("k","Number of clusters:",choices = list('3','4','5'),selected = '3')
+                           selectInput("k","Number of clusters:",choices = list('3','4','5'),selected = '3'),
+                           submitButton("Apply Changes"),
+                           plotOutput("summary")
 #                           selectInput("method","Methods for Clustering:",choices=list('Kmeans','Hierarchical Clustering'))
+
                          ),
                          mainPanel(
                            h2("Clustering"),

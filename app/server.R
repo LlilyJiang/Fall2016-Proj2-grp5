@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
   ###Filter the data
   
   TType <- reactive({
-    t <- Trees2
+    t <- Trees
     
 #    if(length(input$Tree_types)!=0){
 #      t = t[t$category==input$Tree_types,]
@@ -35,6 +35,8 @@ shinyServer(function(input, output) {
     
     if(length(input$Tree)!=0){
       t = t[t$category==input$Tree,]
+#      t = t[t$category=="Oak",]
+#      dim(t)
 #      t = filter(t,t$category == input$Tree)
     }
     if(input$Status==T){
@@ -48,7 +50,7 @@ shinyServer(function(input, output) {
   observe({
     leafletProxy("map") %>%
       clearShapes() %>%
-        addCircles(data = TType(), ~longitude, ~latitude,radius=0.3,opacity=1)
+        addCircles(data = TType(), ~longitude, ~latitude,radius=0.5,opacity=0.5)
   })
 #Used to debug  
 #  output$text <- renderText(c(input$Tree,dim(TType())))
@@ -76,30 +78,11 @@ shinyServer(function(input, output) {
   })
   
   output$plot1 <- renderPlotly({
-    ProblemPresence<-c('Yes', 'No')
-#    Problems
-    vn=switch(input$variable,
-              'Root Stone'="1",
-              'Root Grate'="2",
-              'Trunk Wire'="3",
-              'Trunk Light'="4",
-              'Brch Light'="5",
-              'Brch Shoe'="6",
-              'Sidewalk'=7    
-    )
-    vn=as.numrtic(vn)
-    vn=2
-    Poor<-rbind(TreeProblems[vn,1],TreeNOProblems[vn,1])
-    Fair<-rbind(TreeProblems[vn,2],TreeNOProblems[vn,2])
-    Good<-rbind(TreeProblems[vn,3],TreeNOProblems[vn,3])
-    HealthData2<-data.frame()
-    HealthData2<-data.frame(ProblemPresence,Poor,Fair,Good)
-    
-    
-    plot_ly(HealthData2, x=ProblemPresence, y = Poor, type = 'bar', name = 'Poor') %>%
-      add_trace(x=ProblemPresence,y = Fair, type = 'bar',name = 'Fair') %>%
-      add_trace(x=ProblemPresence,y = Good, type = 'bar',name = 'Good') %>%
-      layout(yaxis = list(title = 'Percent'),xaxis = list(title = 'Precense of Problem'), barmode = 'stack')
+    plot_ly(
+      x = c("Poor", "Fair", "Good"), y = rownames(TreeProblems),
+      z = TreeProblems,type = "heatmap"
+    )%>%
+      layout(xaxis=list(title = "",showticklabels = TRUE),yaxis=list(title = "",showticklabels = TRUE))
   })
   
   
@@ -164,6 +147,36 @@ shinyServer(function(input, output) {
   #  plot(hc, labels = FALSE, hang = -1)
   # Add rectangle around 3 groups
   #  rect.hclust(hc, k = 5, border = 2:4)
+  
+    output$summary <-renderPlot({
+      cl_result<-aggregate(zipdata,by=list(km.res$cluster),FUN=mean)
+      cl_result[,7:15]<-1-cl_result[,7:15]
+      ranktable<-cl_result[,c(1,3,4,6:15)]
+      for(i in c(2:13)){
+        ranktable[,i]<-rank(-ranktable[,i])
+      }
+      colnames(ranktable)[1:4]<-c("Cluster","Health","Guards","Sidewalk")
+      
+      
+      m<-names(ranktable[,2:13])
+      longdata<-melt(ranktable,measure.vars = m)
+      
+      area.color<-longdata$value
+      area.color[!area.color==3]<-"other clusters"
+      area.color[area.color==3]<-"top rank cluster"
+      p1<-ggplot(longdata,aes(x=factor(Cluster), y = value,fill = area.color)) + 
+        facet_wrap(~variable) +
+        geom_bar(aes(fill = area.color),stat="identity")+
+        scale_fill_manual(values = c("gray50", "red"))+
+        theme(axis.title.x=element_blank(),
+              axis.text.x=element_blank(),
+              axis.ticks.x=element_blank(),
+              axis.title.y=element_blank(),
+              axis.text.y=element_blank(),
+              axis.ticks.y=element_blank(),
+              legend.position="none")
+      p1 
+    })
   
   
   })
