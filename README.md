@@ -12,7 +12,7 @@ Term: Fall 2016
 	+ Mengyuan Tao
 	+ Jiayu Wang
 	
-+ Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project summary: In this project, we explore the distribution of all categories of trees in New York City. According to their distributions and health conditions, we analyze the problems existing in the protection of trees in different communities. And we also give descrptions of trees for education purpose. In EDA part, we enable users to investigate the relationship between health condition of trees and specific problems met by the trees.
 
 In this second project of Applied Data Science, we will carry out *Exploratory Data Analysis and Visualization* via a shiny app on a topic about open data released from the [New York City open data portal](https://nycopendata.socrata.com/). See [Project 2 Description](doc/project2_desc.md) for more details.  
 
